@@ -1,10 +1,9 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class AILogic {
     public static Scanner scanner = new Scanner(System.in);
 
-    public static void easyAIMove(GridCreator gridCreator, GameLogic gameLogic, ArrayList<Integer> playerMoves) {
+    public static void easyAIMove(GridCreator gridCreator, GameLogic gameLogic) {
         System.out.println("\nIt is now the AI's turn. It will make a move once [Enter] is pressed.");
         scanner.nextLine();
 
@@ -15,42 +14,43 @@ public class AILogic {
         }
         while (!gameLogic.placeMove(aiMove, 2));
 
-        playerMoves.add(aiMove);
+        PlayerLogic.playerMove = aiMove;
+        GameLogic.addPlayerMoves(main.playersMoves, 2);
 
         System.out.println("The AI has made a move in column " + aiMove + ".");
         gameLogic.displayGrid();
     }
 
-    public static void hardAIMove(GridCreator gridCreator, GameLogic gameLogic, int rows, int cols, ArrayList<Integer> playerMoves) {
+    public static void hardAIMove(GameLogic gameLogic, int rows, int cols, int[][] playersMoves) {
         System.out.println("\nIt is now the AI's turn. It will make a move once [Enter] is pressed.");
         scanner.nextLine();
 
         int aiMove = -1;
         int minDistance = Integer.MAX_VALUE;
 
-        for (int col = 0; col < gridCreator.getCols(); col++) {
+        for (int col = 0; col < cols; col++) {
             if (gameLogic.getColumnHeight(col) == rows) {
                 continue;
             }
 
             boolean canBlockPlayer = false;
             for (int row = 0; row < rows; row++) {
-                if (gameLogic.checkHorizontal(playerMoves)){
+                if (gameLogic.checkHorizontal(playersMoves, 2)) {
                     canBlockPlayer = true;
                     break;
                 }
-                if (gameLogic.checkVertical(playerMoves, cols)) {
+                if (gameLogic.checkVertical(playersMoves, 2)) {
                     canBlockPlayer = true;
                     break;
                 }
-                if (gameLogic.checkDiagonal(playerMoves)) {
+                if (gameLogic.checkDiagonal(playersMoves, 2)) {
                     canBlockPlayer = true;
                     break;
                 }
             }
 
             if (canBlockPlayer) {
-                int distance = calculateDistanceToPlayerMoves(col, playerMoves);
+                int distance = calculateDistanceToPlayerMoves(col, playersMoves);
                 if (distance < minDistance) {
                     minDistance = distance;
                     aiMove = col;
@@ -59,11 +59,11 @@ public class AILogic {
         }
 
         if (aiMove == -1) {
-            for (int col = 0; col < gridCreator.getCols(); col++) {
+            for (int col = 0; col < cols; col++) {
                 if (gameLogic.getColumnHeight(col) == rows) {
                     continue;
                 }
-                int distance = calculateDistanceToPlayerMoves(col, playerMoves);
+                int distance = calculateDistanceToPlayerMoves(col, playersMoves);
                 if (distance < minDistance) {
                     minDistance = distance;
                     aiMove = col;
@@ -76,16 +76,22 @@ public class AILogic {
         }
 
         gameLogic.placeMove(aiMove, 2);
-        playerMoves.add(aiMove);
+
+        PlayerLogic.playerMove = aiMove;
+        GameLogic.addPlayerMoves(main.playersMoves, 2);
 
         System.out.println("The AI has made a move in column " + aiMove + ".");
         gameLogic.displayGrid();
     }
 
-    private static int calculateDistanceToPlayerMoves(int column, ArrayList<Integer> playerMoves) {
+    private static int calculateDistanceToPlayerMoves(int column, int[][] playersMoves) {
         int distance = 0;
-        for (int playerMove : playerMoves) {
-            distance += Math.abs(column - playerMove);
+        for (int row = 0; row < playersMoves.length; row++) {
+            for (int col = 0; col < playersMoves[row].length; col++) {
+                if (playersMoves[row][col] != 0 && playersMoves[row][col] != 2) {
+                    distance += Math.abs(column - col);
+                }
+            }
         }
         return distance;
     }

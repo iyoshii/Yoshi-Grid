@@ -1,14 +1,13 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-import java.util.ArrayList;
 
 public class main {
     public static Scanner scanner = new Scanner(System.in);
     private static int rows;
     private static int cols;
     private static int totalMoves;
-    private static ArrayList <Integer> playerMoves = new ArrayList<>();
+    static int[][] playersMoves;
 
     public static void main(String[] args) {
         String fileName = "invalidInput.txt";
@@ -243,6 +242,7 @@ public class main {
         System.out.println("\nThe " + rows + "x" + cols + " grid is now printing, please press [Enter] to continue to the game.");
         scanner.nextLine();
 
+        playersMoves = new int[rows][cols];
         GridCreator gridCreator = new GridCreator(rows, cols);
         gridCreator.printGrid();
     }
@@ -251,27 +251,27 @@ public class main {
         boolean gameEnded = false;
 
         while (!gameEnded) {
-            PlayerLogic.player1MultiMove(username, gridCreator, gameLogic, playerMoves);
+            PlayerLogic.player1MultiMove(username, gridCreator, gameLogic);
             totalMoves++;
 
-            if (gameLogic.checkWin(playerMoves, cols)) {
-                GameBanner.winAIBanner(username, playerMoves);
+            if (gameLogic.checkWin(playersMoves, 1)) {
+                GameBanner.winAIBanner(username);
                 gameEnded = true;
             }
             else if (gameLogic.checkForDraw(gridCreator.getGrid(), totalMoves)) {
-                GameBanner.drawAIBanner(username, playerMoves);
+                GameBanner.drawAIBanner(username);
                 gameEnded = true;
             }
             else {
-                AILogic.easyAIMove(gridCreator, gameLogic, playerMoves);
+                AILogic.easyAIMove(gridCreator, gameLogic);
                 totalMoves++;
 
-                if (gameLogic.checkWin(playerMoves, cols)) {
-                    GameBanner.loseAIBanner(username, playerMoves);
+                if (gameLogic.checkWin(playersMoves, 2)) {
+                    GameBanner.loseAIBanner(username);
                     gameEnded = true;
                 }
                 else if (gameLogic.checkForDraw(gridCreator.getGrid(), totalMoves)) {
-                    GameBanner.drawAIBanner(username, playerMoves);
+                    GameBanner.drawAIBanner(username);
                     gameEnded = true;
                 }
             }
@@ -282,27 +282,27 @@ public class main {
         boolean gameEnded = false;
 
         while (!gameEnded) {
-            PlayerLogic.player1MultiMove(username, gridCreator, gameLogic, playerMoves);
+            PlayerLogic.player1MultiMove(username, gridCreator, gameLogic);
             totalMoves++;
 
-            if (gameLogic.checkWin(playerMoves, cols)) {
-                GameBanner.winAIBanner(username, playerMoves);
+            if (gameLogic.checkWin(playersMoves, 1)) {
+                GameBanner.winAIBanner(username);
                 gameEnded = true;
             }
             else if (gameLogic.checkForDraw(gridCreator.getGrid(), totalMoves)) {
-                GameBanner.drawAIBanner(username, playerMoves);
+                GameBanner.drawAIBanner(username);
                 gameEnded = true;
             }
             else {
-                AILogic.hardAIMove(gridCreator, gameLogic, rows, cols, playerMoves);
+                AILogic.hardAIMove(gameLogic, rows, cols, playersMoves);
                 totalMoves++;
 
-                if (gameLogic.checkWin(playerMoves, cols)) {
-                    GameBanner.loseAIBanner(username, playerMoves);
+                if (gameLogic.checkWin(playersMoves, 2)) {
+                    GameBanner.loseAIBanner(username);
                     gameEnded = true;
                 }
                 else if (gameLogic.checkForDraw(gridCreator.getGrid(), totalMoves)) {
-                    GameBanner.drawAIBanner(username, playerMoves);
+                    GameBanner.drawAIBanner(username);
                     gameEnded = true;
                 }
             }
@@ -313,27 +313,27 @@ public class main {
         boolean gameEnded = false;
 
         while (!gameEnded) {
-            PlayerLogic.player1MultiMove(username, gridCreator, gameLogic, playerMoves);
+            PlayerLogic.player1MultiMove(username, gridCreator, gameLogic);
             totalMoves++;
 
-            if (gameLogic.checkWin(playerMoves, cols)) {
-                GameBanner.userWinBanner(username, friendUsername, playerMoves);
+            if (gameLogic.checkWin(playersMoves, 1)) {
+                GameBanner.userWinBanner(username, friendUsername);
                 gameEnded = true;
             }
             else if (gameLogic.checkForDraw(gridCreator.getGrid(), totalMoves)) {
-                GameBanner.drawBanner(username, friendUsername, playerMoves);
+                GameBanner.drawBanner(username, friendUsername);
                 gameEnded = true;
             }
             else {
-                PlayerLogic.player2MultiMove(friendUsername, gridCreator, gameLogic, playerMoves);
+                PlayerLogic.player2MultiMove(friendUsername, gridCreator, gameLogic);
                 totalMoves++;
 
-                if (gameLogic.checkWin(playerMoves, cols)) {
-                    GameBanner.friendWinBanner(username, friendUsername, playerMoves);
+                if (gameLogic.checkWin(playersMoves, 2)) {
+                    GameBanner.friendWinBanner(username, friendUsername);
                     gameEnded = true;
                 }
                 else if (gameLogic.checkForDraw(gridCreator.getGrid(), totalMoves)) {
-                    GameBanner.drawBanner(username, friendUsername, playerMoves);
+                    GameBanner.drawBanner(username, friendUsername);
                     gameEnded = true;
                 }
             }

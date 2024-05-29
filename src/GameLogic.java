@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class GameLogic {
     private char[][] grid;
     private int rows;
@@ -11,40 +9,70 @@ public class GameLogic {
         this.grid = new char[rows][cols];
     }
 
-    public boolean checkWin(ArrayList <Integer> playerMoves, int cols) {
-        return checkHorizontal(playerMoves) || checkVertical(playerMoves, cols) || checkDiagonal(playerMoves);
+    public boolean checkWin(int[][] playersMoves, int player) {
+        return checkVertical(playersMoves, player) || checkHorizontal(playersMoves, player) || checkDiagonal(playersMoves, player);
     }
 
-    public boolean checkHorizontal(ArrayList<Integer> playerMoves) {
-        return false;
-    }
-
-    public boolean checkVertical(ArrayList <Integer> playerMoves, int cols) {
-        int[] p1Counts = new int[cols]; // Keep track of the count for each column for Player 1
-        int[] p2Counts = new int[cols]; // Keep track of the count for each column for Player 2
-
-        for (int i = 0; i < playerMoves.size(); i++) {
-            int column = playerMoves.get(i);
-
-            if (i % 2 == 0) { // Player 1's turn
-                p1Counts[column]++;
-
-                if (p1Counts[column] >= 4) {
-                    return true; // Player 1 wins
-                }
-            } else { // Player 2's turn
-                p2Counts[column]++;
-
-                if (p2Counts[column] >= 4) {
-                    return true; // Player 2 wins
+    public boolean checkHorizontal(int[][] playersMoves, int player) {
+        for (int row = 0; row < playersMoves.length; row++) {
+            for (int col = 0; col < playersMoves[row].length - 3; col++) {
+                if(playersMoves[row][col] == player){
+                    if(playersMoves[row][col + 1] == player){
+                        if(playersMoves[row][col + 2] == player){
+                            if(playersMoves[row][col + 3] == player){
+                                return true;
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        return false; // No winner
+        return false;
     }
 
-    public boolean checkDiagonal(ArrayList <Integer> playerMoves){
+    public boolean checkVertical(int[][] playersMoves, int player) {
+        for (int row = 0; row < playersMoves.length - 3; row++) {
+            for (int col = 0; col < playersMoves[row].length; col++) {
+                    if(playersMoves[row][col] == player){
+                        if(playersMoves[row + 1][col] == player){
+                            if(playersMoves[row + 2][col] == player){
+                                if(playersMoves[row + 3][col] == player){
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        return false;
+    }
+
+    public boolean checkDiagonal(int[][] playersMoves, int player) {
+        for (int row = 0; row < playersMoves.length - 3; row++) {
+            for (int col = 0; col < playersMoves[row].length - 3; col++) {
+                if(playersMoves[row][col] == player){
+                    if(playersMoves[row + 1][col + 1] == player){
+                        if(playersMoves[row + 2][col + 2] == player){
+                            if(playersMoves[row + 3][col + 3] == player){
+                                return true;
+                            }
+                        }
+                    }
+                }
+                if(row >= 3 && playersMoves[row][col] == player){
+                    if(playersMoves[row - 1][col + 1] == player){
+                        if(playersMoves[row - 2][col + 2] == player){
+                            if(playersMoves[row - 3][col + 3] == player){
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return false;
     }
 
@@ -98,6 +126,29 @@ public class GameLogic {
             System.out.print("+");
             System.out.print("---+".repeat(cols));
             System.out.println();
+        }
+    }
+
+    public static void addPlayerMoves(int[][] playersMoves, int player) {
+        boolean added = false;
+
+        for (int row = 0; row < playersMoves.length; row++) {
+            for (int col = 0; col < playersMoves[row].length; col++) {
+                if (playersMoves[row][PlayerLogic.playerMove] == 0) {
+                    if (player == 1) {
+                        playersMoves[row][PlayerLogic.playerMove] = 1;
+                    } else {
+                        playersMoves[row][PlayerLogic.playerMove] = 2;
+                    }
+
+                    added = true;
+                    break;
+                }
+            }
+
+            if (added) {
+                break;
+            }
         }
     }
 }

@@ -1,8 +1,9 @@
-import java.util.ArrayList;
 import java.util.Scanner;
+
 public class PlayerLogic {
     public static Scanner scanner = new Scanner(System.in);
-    public static void player1MultiMove(String username, GridCreator gridCreator, GameLogic gameLogic, ArrayList<Integer> playerMoves) {
+    static int playerMove;
+    public static void player1MultiMove(String username, GridCreator gridCreator, GameLogic gameLogic) {
         boolean player1ValidMove = false;
 
         while (!player1ValidMove) {
@@ -12,7 +13,9 @@ public class PlayerLogic {
 
             if (player1Move >= 0 && player1Move < gridCreator.getCols()) {
                 if (gameLogic.placeMove(player1Move, 1)) {
-                    playerMoves.add(player1Move);
+
+                    playerMove = player1Move;
+                    GameLogic.addPlayerMoves(main.playersMoves, 1);
 
                     gameLogic.displayGrid();
                     player1ValidMove = true;
@@ -31,7 +34,7 @@ public class PlayerLogic {
         }
     }
 
-    public static void player2MultiMove(String friendUsername, GridCreator gridCreator, GameLogic gameLogic, ArrayList<Integer> playerMoves) {
+    public static void player2MultiMove(String friendUsername, GridCreator gridCreator, GameLogic gameLogic) {
         boolean player2ValidMove = false;
 
         while (!player2ValidMove) {
@@ -41,7 +44,9 @@ public class PlayerLogic {
 
             if (player2Move >= 0 && player2Move < gridCreator.getCols()) {
                 if (gameLogic.placeMove(player2Move, 2)) {
-                    playerMoves.add(player2Move);
+
+                    playerMove = player2Move;
+                    GameLogic.addPlayerMoves(main.playersMoves, 2);
 
                     gameLogic.displayGrid();
                     player2ValidMove = true;
